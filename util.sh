@@ -8,21 +8,21 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-get_timer(){
+get_timer() {
     echo $(date +%s)
 }
 
 # $1: start timer
-elapsed_time(){
+elapsed_time() {
     echo $(echo $1 $(get_timer) | awk '{ printf "%0.2f",($2-$1)/60 }')
 }
 
-show_elapsed_time(){
+show_elapsed_time() {
     info "Time %s: %s minutes" "$1" "$(elapsed_time $2)"
 }
 
-check_root(){
-    (( EUID == 0 )) && return
+check_root() {
+    ((EUID == 0)) && return
     if type -P sudo >/dev/null; then
         exec sudo -- "$@"
     else
@@ -30,17 +30,17 @@ check_root(){
     fi
 }
 
-check_requirements(){
+check_requirements() {
     local package="archiso"
     #checking if application is already installed or else install with aur helpers
-    if ! pacman -Qi $package &> /dev/null; then
+    if ! pacman -Qi $package &>/dev/null; then
         # checking which helper is installed
-        if pacman -Qi yay &> /dev/null; then
+        if pacman -Qi yay &>/dev/null; then
             echo "################################################################"
             echo "######### Installing with yay"
             echo "################################################################"
             yay -S --noconfirm $package
-        elif pacman -Qi trizen &> /dev/null; then
+        elif pacman -Qi trizen &>/dev/null; then
             echo "################################################################"
             echo "######### Installing with trizen"
             echo "################################################################"
@@ -48,7 +48,7 @@ check_requirements(){
         fi
 
         # Just checking if installation was successful
-        if pacman -Qi $package &> /dev/null; then
+        if pacman -Qi $package &>/dev/null; then
             echo "################################################################"
             echo "#########  "$package" has been installed"
             echo "################################################################"
@@ -61,7 +61,7 @@ check_requirements(){
     fi
 }
 
-prepare_dir(){
+prepare_dir() {
     if [[ ! -d $1 ]]; then
         mkdir -p $1
     fi
@@ -80,8 +80,8 @@ load_vars() {
 
 create_chksums() {
     msg2 "creating checksums for [$1]"
-    sha1sum $1 > $1.sha1
-    sha256sum $1 > $1.sha256
+    sha1sum $1 >$1.sha1
+    sha256sum $1 >$1.sha256
 }
 
 sign_with_key() {

@@ -38,11 +38,14 @@ opts='p:cvh'
 
 while getopts "${opts}" arg; do
     case "${arg}" in
-        c) clean_first=false ;;
-        p) build_list_iso="$OPTARG" ;;
-        v) verbose=true ;;
-        h|?) usage 0 ;;
-        *) echo "invalid argument '${arg}'"; usage 1 ;;
+    c) clean_first=false ;;
+    p) build_list_iso="$OPTARG" ;;
+    v) verbose=true ;;
+    h | ?) usage 0 ;;
+    *)
+        echo "invalid argument '${arg}'"
+        usage 1
+        ;;
     esac
 done
 

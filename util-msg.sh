@@ -11,11 +11,11 @@
 export LC_MESSAGES=C
 export LANG=C
 
-disable_colors(){
+disable_colors() {
     unset ALL_OFF BOLD BLUE GREEN RED YELLOW
 }
 
-enable_colors(){
+enable_colors() {
     # prefer terminal safe colored and bold text when tput is supported
     if tput setaf 0 &>/dev/null; then
         ALL_OFF="$(tput sgr0)"
@@ -42,37 +42,44 @@ else
 fi
 
 plain() {
-    local mesg=$1; shift
+    local mesg=$1
+    shift
     printf "${BOLD}    ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
 msg() {
-    local mesg=$1; shift
+    local mesg=$1
+    shift
     printf "${GREEN}==>${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
 msg2() {
-    local mesg=$1; shift
+    local mesg=$1
+    shift
     printf "${BLUE}  ->${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
 info() {
-    local mesg=$1; shift
+    local mesg=$1
+    shift
     printf "${YELLOW} -->${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
 warning() {
-    local mesg=$1; shift
+    local mesg=$1
+    shift
     printf "${YELLOW}==> WARNING:${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
 error() {
-    local mesg=$1; shift
+    local mesg=$1
+    shift
     printf "${RED}==> ERROR:${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
 stat_busy() {
-    local mesg=$1; shift
+    local mesg=$1
+    shift
     printf "${GREEN}==>${ALL_OFF}${BOLD} ${mesg}...${ALL_OFF}" >&2
 }
 
@@ -90,11 +97,11 @@ abort() {
 }
 
 die() {
-    (( $# )) && error "$@"
+    (($#)) && error "$@"
     cleanup 255
 }
 
-import(){
+import() {
     if [[ -r $1 ]]; then
         source $1
     else

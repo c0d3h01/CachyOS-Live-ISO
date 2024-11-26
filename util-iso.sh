@@ -14,7 +14,7 @@ error_function() {
         rm "$logpipe"
     fi
     # first exit all subshells, then print the error
-    if (( ! BASH_SUBSHELL )); then
+    if ((!BASH_SUBSHELL)); then
         error "A failure occurred in %s()." "$1"
         plain "Aborting..."
     fi
@@ -48,7 +48,8 @@ check_umount() {
 }
 
 trap_exit() {
-    local sig=$1; shift
+    local sig=$1
+    shift
     error "$@"
     umount_fs
     trap -- "$sig"
@@ -56,7 +57,7 @@ trap_exit() {
 }
 
 generate_motd() {
-    cat << 'EOF' > ${src_dir}/archiso/airootfs/etc/motd
+    cat <<'EOF' >${src_dir}/archiso/airootfs/etc/motd
 This ISO is based on ArchLinux ISO modified to provide Installation Environment for [38;2;23;147;209mCachyOS[0m.
 https://cachyos.org
 
@@ -83,7 +84,7 @@ fetch_cachyos_mirrorlist() {
     mkdir -p ${src_dir}/archiso/airootfs/etc/pacman.d
     local _mirrorlist_url="https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/master/cachyos-mirrorlist/cachyos-mirrorlist"
 
-    curl -sSL "${_mirrorlist_url}" > ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-mirrorlist
+    curl -sSL "${_mirrorlist_url}" >${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-mirrorlist
 }
 
 change_grub_version() {
@@ -94,7 +95,7 @@ change_grub_version() {
 generate_environment() {
     local _profile="$1"
     if [ "$_profile" == "desktop" ]; then
-        cat << 'EOF' > ${src_dir}/archiso/airootfs/etc/environment
+        cat <<'EOF' >${src_dir}/archiso/airootfs/etc/environment
 ZPOOL_VDEV_NAME_PATH=1
 EOF
     fi
@@ -104,17 +105,20 @@ generate_version_tag() {
     local _profile="$1"
     local _version="$2"
     if [ "$_profile" == "desktop" ]; then
-        echo "${_version}" > ${src_dir}/archiso/airootfs/etc/version-tag
+        echo "${_version}" >${src_dir}/archiso/airootfs/etc/version-tag
     fi
 }
 
 generate_edition_tag() {
     local _edition="$1"
-    echo "${_edition}" > ${src_dir}/archiso/airootfs/etc/edition-tag
+    echo "${_edition}" >${src_dir}/archiso/airootfs/etc/edition-tag
 }
 
 modify_mkarchiso() {
-    local _is_hack_applied="$(grep -q 'archlinux-keyring-wkd-sync.timer' /usr/bin/mkarchiso; echo $?)"
+    local _is_hack_applied="$(
+        grep -q 'archlinux-keyring-wkd-sync.timer' /usr/bin/mkarchiso
+        echo $?
+    )"
     if [ $_is_hack_applied -ne 0 ]; then
         msg "Patching mkarchiso with disabled arch keyrings timer..."
 
@@ -124,7 +128,7 @@ modify_mkarchiso() {
     fi
 }
 
-prepare_profile(){
+prepare_profile() {
     profile=$1
 
     info "Profile: [%s]" "${profile}"
@@ -214,7 +218,7 @@ run_build() {
     show_elapsed_time "${FUNCNAME}" "${timer_start}"
 }
 
-gen_iso_fn(){
+gen_iso_fn() {
     local vars=() name
     vars+=("cachyos")
     [[ -n ${profile} ]] && vars+=("${profile}")
